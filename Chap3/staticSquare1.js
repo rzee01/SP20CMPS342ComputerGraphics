@@ -41,7 +41,6 @@ window.onload = function init()
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    thetaLoc = gl.getUniformLocation( program, "theta" );
 
     render();
 };
@@ -50,9 +49,6 @@ window.onload = function init()
 function render() {
 
     gl.clear( gl.COLOR_BUFFER_BIT );
-
-    //theta += 0.1;
-    gl.uniform1f( thetaLoc, theta );
 
     gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
 
