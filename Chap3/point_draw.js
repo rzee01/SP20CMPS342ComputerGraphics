@@ -6,7 +6,7 @@ var gl;
 var sizeof_float = 4;  // our float's are 32-bit
 var sizeof_vertex = sizeof_float * 2; // only 2d vertices in this example
 var sizeof_color = sizeof_float * 4;
-var maxVertices = 100;
+var maxVertices = 500;
 
 var index = 0;
 var reached_max = false;
@@ -24,8 +24,12 @@ var colors = [
 
 
 var toClip = function(event) {
-    return vec2(2*event.clientX/canvas.width-1,
+    var clip = vec2(2*event.clientX/canvas.width-1,
            2*(canvas.height-event.clientY)/canvas.height-1);
+
+    console.log(event.clientX + ", " + event.clientY + " -> " + JSON.stringify(clip));
+    return clip;
+
 }
 
 
@@ -55,7 +59,7 @@ window.onload = function init() {
         add_point ( vec2((Math.random() - 0.5 ) *2, (Math.random() - 0.5 ) *2));
     }
 
-    
+
     /*
     canvas.addEventListener("mousedown", function(event){
         var t = toClip(event);
@@ -63,7 +67,7 @@ window.onload = function init() {
     } );
     */
 
-    /*
+    
     canvas.addEventListener("mousedown", function(event){
       mouse_down = true;
     });
@@ -78,7 +82,7 @@ window.onload = function init() {
             add_point(t);
         }
     });
-    */
+    
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
     gl.clearColor( 0.5, 0.5, 0.5, 1.0 );
