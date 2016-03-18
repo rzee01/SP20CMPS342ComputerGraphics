@@ -591,7 +591,7 @@ function normalize( u, excludeLastComponent )
     if ( !isFinite(len) ) {
         throw "normalize: vector " + u + " has zero length";
     }
-
+    
     for ( var i = 0; i < u.length; ++i ) {
         u[i] /= len;
     }

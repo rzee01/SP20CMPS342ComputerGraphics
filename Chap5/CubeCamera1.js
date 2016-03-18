@@ -14,8 +14,14 @@ var zAxis = 2;
 
 var axis = 0;
 var theta = [ 0, 0, 0 ];
+var eye = vec3(0, 0, 1);
 
-var thetaLoc;
+var modelMatrixLoc;
+var modelMatrix;
+var viewMatrixLoc;
+var viewMatrix;
+var projectionMatrixLoc;
+var projectionMatrix;
 
 window.onload = function init()
 {
@@ -54,20 +60,15 @@ window.onload = function init()
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    thetaLoc = gl.getUniformLocation(program, "theta");
+    // obtain the model matrix uniform location from the shader
+    modelMatrixLoc = gl.getUniformLocation( program, "mMatrix" );
+    viewMatrixLoc = gl.getUniformLocation( program, "vMatrix" );
+    projectionMatrixLoc = gl.getUniformLocation( program, "pMatrix" );
 
-    //event listeners for buttons
 
-    document.getElementById( "xButton" ).onclick = function () {
-        axis = xAxis;
-    };
-    document.getElementById( "yButton" ).onclick = function () {
-        axis = yAxis;
-    };
-    document.getElementById( "zButton" ).onclick = function () {
-        axis = zAxis;
-    };
-
+    // Create the model matrix (Y and Z rotation)
+    modelMatrix = rotateY(30);
+    modelMatrix = mult(modelMatrix, rotateZ(10));
     render();
 }
 
@@ -93,7 +94,7 @@ function quad(a, b, c, d)
         vec4(  0.5,  0.5, -0.5, 1.0 ),
         vec4(  0.5, -0.5, -0.5, 1.0 )
     ];
-
+    
     var vertexColors = [
         [ 0.0, 0.0, 0.0, 1.0 ],  // black
         [ 1.0, 0.0, 0.0, 1.0 ],  // red
@@ -115,8 +116,7 @@ function quad(a, b, c, d)
 
     for ( var i = 0; i < indices.length; ++i ) {
         points.push( vertices[indices[i]] );
-        //colors.push( vertexColors[indices[i]] );
-
+      
         // for solid colored faces use
         colors.push(vertexColors[a]);
 
@@ -126,10 +126,22 @@ function quad(a, b, c, d)
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+    viewMatrix = lookAt(eye, vec3(0, 0, 0), vec3(0, 1, 0));
 
-    theta[axis] += 2.0;
-    uniform3fv
+    var near = -10;
+    var far = 10;
+    var left = -1.0;
+    var right = 1.0;
+    var ytop = 1.0;
+    var bottom = -1.0;
 
+    projectionMatrix = ortho( left, right, bottom, ytop, near, far );
+
+    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
+    gl.uniformMatrix4fv( viewMatrixLoc, false, flatten(viewMatrix) );
+    gl.uniformMatrix4fv( modelMatrixLoc, false, flatten(modelMatrix) );
+    
     gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
 
     requestAnimFrame( render );

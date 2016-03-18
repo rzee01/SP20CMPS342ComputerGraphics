@@ -28,15 +28,11 @@ main()
     
     if(lightPosition.w == 0.0) L = normalize(lightPosition.xyz);
     else L = normalize( lightPosition.xyz - pos );
-
-
 	
     vec3 E = -normalize( pos );
     vec3 H = normalize( L + E );
 
     // Transform vertex normal into eye coordinates
-    
-       
     vec3 N = normalize( normalMatrix*vNormal.xyz);
 
     // Compute terms in the illumination equation
@@ -45,18 +41,11 @@ main()
     float Kd = max( dot(L, N), 0.0 );
     vec4  diffuse = Kd*diffuseProduct;
 
-    float Ks = pow( max(dot(N, H), 0.0), shininess );
-    vec4  specular = Ks * specularProduct;
     
-    if( dot(L, N) < 0.0 ) {
-	specular = vec4(0.0, 0.0, 0.0, 1.0);
-    } 
-
     gl_Position = projectionMatrix * modelViewMatrix * vPosition;
     
-    //fColor = ambient + diffuse +specular;
-    fColor = diffuse;
-
+    fColor = ambient + diffuse;
+    
     fColor.a = 1.0;
 }
 </script>
@@ -95,7 +84,7 @@ main()
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 
 <script type="text/javascript" src="../Common/MV.js"></script>
-<script type="text/javascript" src="shadedSphere3.js"></script>
+<script type="text/javascript" src="SmoothSphere.js"></script>
 
 <body>
 <canvas id="gl-canvas" width="512" height="512">

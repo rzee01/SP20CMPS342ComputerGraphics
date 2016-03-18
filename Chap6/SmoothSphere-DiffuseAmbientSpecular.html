@@ -54,9 +54,8 @@ main()
 
     gl_Position = projectionMatrix * modelViewMatrix * vPosition;
     
-    //fColor = ambient + diffuse +specular;
-    fColor = diffuse;
-
+    fColor = ambient + diffuse +specular;
+    
     fColor.a = 1.0;
 }
 </script>
@@ -95,7 +94,7 @@ main()
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 
 <script type="text/javascript" src="../Common/MV.js"></script>
-<script type="text/javascript" src="shadedSphere3.js"></script>
+<script type="text/javascript" src="SmoothSphere.js"></script>
 
 <body>
 <canvas id="gl-canvas" width="512" height="512">

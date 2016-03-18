@@ -9,11 +9,10 @@ attribute vec4 vNormal;
 varying vec4 fColor;
 
 
-uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform vec4 ambientProduct, diffuseProduct;
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 uniform vec4 lightPosition;
-uniform float shininess;
 uniform mat3 normalMatrix;
 
 
@@ -45,17 +44,11 @@ main()
     float Kd = max( dot(L, N), 0.0 );
     vec4  diffuse = Kd*diffuseProduct;
 
-    float Ks = pow( max(dot(N, H), 0.0), shininess );
-    vec4  specular = Ks * specularProduct;
-    
-    if( dot(L, N) < 0.0 ) {
-	specular = vec4(0.0, 0.0, 0.0, 1.0);
-    } 
 
     gl_Position = projectionMatrix * modelViewMatrix * vPosition;
     
-    //fColor = ambient + diffuse +specular;
-    fColor = diffuse;
+    fColor = ambient + diffuse;
+    
 
     fColor.a = 1.0;
 }
@@ -95,7 +88,7 @@ main()
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 
 <script type="text/javascript" src="../Common/MV.js"></script>
-<script type="text/javascript" src="shadedSphere3.js"></script>
+<script type="text/javascript" src="FlatSphere.js"></script>
 
 <body>
 <canvas id="gl-canvas" width="512" height="512">

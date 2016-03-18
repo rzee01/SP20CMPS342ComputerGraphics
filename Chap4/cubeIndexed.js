@@ -71,7 +71,7 @@ function quad(a, b, c, d, color_index)
     var base = vertex_data.positions.length;
 
     // The color is the same for all 4 vertices
-    var color = color[color_index];
+    var color = colors[color_index];
     // There are 4 positions for a quad face.
     // a, b, c, d are indexes into the common position array (8 unique 3D points)    
     var vertices = [a, b, c, d];

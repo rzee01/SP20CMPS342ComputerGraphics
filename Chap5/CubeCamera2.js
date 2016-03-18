@@ -14,8 +14,19 @@ var zAxis = 2;
 
 var axis = 0;
 var theta = [ 0, 0, 0 ];
+var eye = vec3(0, 0, 1);
+var near = -10;
+var far = 10;
+var left = -1.0;
+var right = 1.0;
+var ytop = 1.0;
+var bottom = -1.0;
 
-var thetaLoc;
+
+var modelMatrix;
+var viewMatrix;
+var projectionMatrix;
+var ctMatrixLoc;
 
 window.onload = function init()
 {
@@ -54,20 +65,13 @@ window.onload = function init()
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    thetaLoc = gl.getUniformLocation(program, "theta");
+    // obtain the model matrix uniform location from the shader
+    ctMatrixLoc = gl.getUniformLocation( program, "ctMatrix" );
+   
 
-    //event listeners for buttons
-
-    document.getElementById( "xButton" ).onclick = function () {
-        axis = xAxis;
-    };
-    document.getElementById( "yButton" ).onclick = function () {
-        axis = yAxis;
-    };
-    document.getElementById( "zButton" ).onclick = function () {
-        axis = zAxis;
-    };
-
+    // Create the model matrix (Y and Z rotation)
+    modelMatrix = rotateY(30);
+    modelMatrix = mult(modelMatrix, rotateZ(10));
     render();
 }
 
@@ -93,7 +97,7 @@ function quad(a, b, c, d)
         vec4(  0.5,  0.5, -0.5, 1.0 ),
         vec4(  0.5, -0.5, -0.5, 1.0 )
     ];
-
+    
     var vertexColors = [
         [ 0.0, 0.0, 0.0, 1.0 ],  // black
         [ 1.0, 0.0, 0.0, 1.0 ],  // red
@@ -115,21 +119,68 @@ function quad(a, b, c, d)
 
     for ( var i = 0; i < indices.length; ++i ) {
         points.push( vertices[indices[i]] );
-        //colors.push( vertexColors[indices[i]] );
-
+      
         // for solid colored faces use
         colors.push(vertexColors[a]);
 
     }
 }
 
+window.onkeypress = function( event ) {
+    var key = String.fromCharCode(event.keyCode);
+    switch( key ) {
+        case 'x':
+            eye[0] += 0.5;
+            break;
+        case 'X':
+            eye[0] -= 0.5;
+            break;
+        case 'y':
+            eye[1] += 0.5;
+            break;
+        case 'Y':
+            eye[1] -= 0.5;
+            break;
+
+        case 'z':
+            eye[2] += 0.5;
+            break;
+        case 'Z':
+            eye[2] -= 0.5;
+            break;
+
+        case 'w':
+            left+= 0.25;
+            right-= 0.25
+            break;
+        case 'W':
+            left-= 0.25;
+            right+= 0.25
+            break;
+
+        case 'd':
+            ytop-= 0.25;
+            bottom+= 0.25
+            break;
+        case 'D':
+            ytop+= 0.25;
+            b0ttom-= 0.25
+            break;
+    }
+};
+
+
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+    viewMatrix = lookAt(eye, vec3(0, 0, 0), vec3(0, 1, 0));
+    projectionMatrix = ortho( left, right, bottom, ytop, near, far );
 
-    theta[axis] += 2.0;
-    uniform3fv
-
+    var m = mult(mult(projectionMatrix, viewMatrix), modelMatrix);
+    
+    gl.uniformMatrix4fv( ctMatrixLoc, false, flatten(m) );
+    
     gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
 
     requestAnimFrame( render );
