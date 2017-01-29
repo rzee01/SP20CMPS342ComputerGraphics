@@ -3,7 +3,7 @@
 var gl;
 var points;
 
-var NumPoints = 50;
+var NumPoints = 5000;
 
 window.onload = function init()
 {
@@ -75,5 +75,5 @@ window.onload = function init()
 
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
-    gl.drawArrays( gl.TRIANGLES, 0, points.length );
+    gl.drawArrays( gl.POINTS, 0, points.length );
 }
